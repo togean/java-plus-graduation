@@ -33,7 +33,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
-        log.info("Добавление подборки {}", newCompilationDto.toString());
+        log.info("CompilationServiceImpl: Добавление подборки {}", newCompilationDto.toString());
         Compilation compilation = compilationMapper.toCompilation(newCompilationDto);
 
         compilation.setPinned(Optional.ofNullable(compilation.getPinned()).orElse(false));
@@ -44,7 +44,7 @@ public class CompilationServiceImpl implements CompilationService {
         compilation.setEvents(new HashSet<>(events));
 
         Compilation savedCompilation = compilationRepository.save(compilation);
-        log.info("Подборка добавлена: {}", savedCompilation);
+        log.info("CompilationServiceImpl: Подборка добавлена: {}", savedCompilation);
 
         return compilationMapper.toCompilationDto(savedCompilation);
 
@@ -54,20 +54,20 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation compilation = validateCompilation(compId);
-        log.info("Обновление подборки c {}, на {}", updateCompilationRequest.toString(), compilation.toString());
+        log.info("CompilationServiceImpl: Обновление подборки c {}, на {}", updateCompilationRequest.toString(), compilation.toString());
         if (updateCompilationRequest.getEvents() != null) {
             Set<Long> eventIds = updateCompilationRequest.getEvents();
             List<Event> events = eventRepository.findAllByIdIn(new ArrayList<>(eventIds));
             compilation.setEvents(new HashSet<>(events));
-            log.trace("Events = {}", compilation.getEvents());
+            log.trace("CompilationServiceImpl: Events = {}", compilation.getEvents());
         }
 
         compilation.setPinned(Optional.ofNullable(updateCompilationRequest.getPinned()).orElse(false));
-        log.trace("Pinned = {}", compilation.getPinned());
+        log.trace("CompilationServiceImpl: Pinned = {}", compilation.getPinned());
 
         compilation.setTitle(Optional.ofNullable(updateCompilationRequest.getTitle()).orElse(compilation.getTitle()));
         Compilation updatedCompilation = compilationRepository.save(compilation);
-        log.info("Подборка обновлена: {}", compilation);
+        log.info("CompilationServiceImpl: Подборка обновлена: {}", compilation);
 
         return compilationMapper.toCompilationDto(updatedCompilation);
     }
@@ -75,25 +75,25 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public void deleteCompilation(Long id) {
-        log.info("Удаление подборки c {}", id);
+        log.info("CompilationServiceImpl: Удаление подборки c {}", id);
         validateCompilation(id);
         compilationRepository.deleteById(id);
-        log.info("Подборка удалена");
+        log.info("CompilationServiceImpl: Подборка удалена");
     }
 
     @Override
     public List<CompilationDto> getAllCompilations(Integer from, Integer size, Boolean pinned) {
-        log.info("Получение всех подборок с from={}, size={}, pinned={}", from, size, pinned);
+        log.info("CompilationServiceImpl: Получение всех подборок с from={}, size={}, pinned={}", from, size, pinned);
         PageRequest pageRequest = PageRequest.of(from, size);
         List<Compilation> compilations;
         if (pinned != null) {
-            log.info("Получение всех подборок с pinned: {}", pinned);
+            log.info("CompilationServiceImpl: Получение всех подборок с pinned: {}", pinned);
             compilations = compilationRepository.findAllByPinned(pinned, pageRequest);
-            log.info("Получены подборки с pinned={}: {}", pinned, compilations);
+            log.info("CompilationServiceImpl: Получены подборки с pinned={}: {}", pinned, compilations);
         } else {
-            log.info("Получение всех подборок без фильтрации по pinned");
+            log.info("CompilationServiceImpl: Получение всех подборок без фильтрации по pinned");
             compilations = compilationRepository.findAll(pageRequest).getContent();
-            log.info("Получены все подборки: {}", compilations);
+            log.info("CompilationServiceImpl: Получены все подборки: {}", compilations);
 
         }
         return compilations.stream()
@@ -109,15 +109,15 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto findCompilationById(Long compId) {
-        log.info("Получение подборки с compId={}", compId);
+        log.info("CompilationServiceImpl: Получение подборки с compId={}", compId);
         Compilation compilation = validateCompilation(compId);
-        log.info("Подборка найдена: {}", compilation);
+        log.info("CompilationServiceImpl: Подборка найдена: {}", compilation);
 
         return compilationMapper.toCompilationDto(compilation);
     }
 
     private Compilation validateCompilation(Long compId) {
         return compilationRepository.findById(compId).orElseThrow(
-                () -> new NotFoundException("Подборка с id = " + compId + " не найдена."));
+                () -> new NotFoundException("CompilationServiceImpl: Подборка с id = " + compId + " не найдена."));
     }
 }

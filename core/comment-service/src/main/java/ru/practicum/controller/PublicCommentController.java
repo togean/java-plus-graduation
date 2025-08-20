@@ -21,9 +21,9 @@ public class PublicCommentController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
-        log.info("Пришел GET запрос /events/{}/comments?from={}&size={}", eventId, from, size);
+        log.info("PublicCommentController: Пришел GET запрос /events/{}/comments?from={}&size={}", eventId, from, size);
         final Collection<CommentDto> comments = commentService.findAllByPublic(eventId, from, size);
-        log.info("Отправлен ответ GET /events/{}/comments?from={}&size={} с телом: {}", eventId, from, size, comments);
+        log.info("PublicCommentController: Отправлен ответ GET /events/{}/comments?from={}&size={} с телом: {}", eventId, from, size, comments);
         return comments;
     }
 }

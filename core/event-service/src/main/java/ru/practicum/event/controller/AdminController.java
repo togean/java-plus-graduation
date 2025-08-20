@@ -28,33 +28,33 @@ public class AdminController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size
         ) {
-        log.info("Пришел GET запрос /admin/events с параметрами: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
+        log.info("AdminController: Пришел GET запрос /admin/events с параметрами: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         final Collection<EventFullDto> events = eventService.findAllByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
-        log.info("Отправлен ответ GET /admin/events с телом: {}", events);
+        log.info("AdminController: Отправлен ответ GET /admin/events с телом: {}", events);
         return events;
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto update(@PathVariable Long eventId, @RequestBody @Valid UpdateEventAdminRequest eventDto) {
-        log.info("Пришел PATCH запрос /admin/events/{} с телом {}", eventId, eventDto);
+        log.info("AdminController: Пришел PATCH запрос /admin/events/{} с телом {}", eventId, eventDto);
         final EventFullDto event = eventService.updateByAdmin(eventId, eventDto);
-        log.info("Отправлен ответ PATCH /admin/events/{} с телом: {}", eventId, event);
+        log.info("AdminController: Отправлен ответ PATCH /admin/events/{} с телом: {}", eventId, event);
         return event;
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto findById(@PathVariable Long eventId) {
-        log.info("Пришел GET запрос /admin/events/{}", eventId);
+        log.info("AdminController: Пришел GET запрос /admin/events/{}", eventId);
         final EventFullDto event = eventService.getEventById(eventId);
-        log.info("Отправлен ответ GET /admin/events/eventId с телом: {}", event);
+        log.info("AdminController: Отправлен ответ GET /admin/events/eventId с телом: {}", event);
         return event;
 
     }
 
     @PutMapping("/request/{eventId}")
     public void updateConfirmedRequests(@PathVariable("eventId") Long eventId, @RequestBody Long confirmedRequests) {
-        log.info("Пришел PUT запрос /admin/events/request/{} с телом {}", eventId, confirmedRequests);
+        log.info("AdminController: Пришел PUT запрос /admin/events/request/{} с телом {}", eventId, confirmedRequests);
         eventService.updateEventConfirmedRequests(eventId, confirmedRequests);
     }
 }

@@ -62,10 +62,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public Collection<EventShortDto> findAllByPublic(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size, HttpServletRequest request) {
         if (rangeStart != null && rangeEnd != null && LocalDateTime.parse(rangeStart, formatter).isAfter(LocalDateTime.parse(rangeEnd, formatter))) {
-            throw new IncorrectRequestException("RangeStart is after Range End");
+            throw new IncorrectRequestException("EventServiceImpl: RangeStart is after Range End");
         }
         if (sort != null && !sort.equals("EVENT_DATE") && !sort.equals("VIEWS")) {
-            throw new IncorrectRequestException("Unknown sort type");
+            throw new IncorrectRequestException("EventServiceImpl: Unknown sort type");
         }
         saveView(request);
         final Collection<Event> events = eventRepository.findAllByPublic(text, categories, paid, rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter), rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, formatter), onlyAvailable, (Pageable) PageRequest.of(from, size));
@@ -108,7 +108,7 @@ public class EventServiceImpl implements EventService {
         final Event event = findEventById(eventId);
 
         if (isPublic && !event.getState().equals(State.PUBLISHED)) {
-            throw new NotFoundException("Event with id=" + eventId + " was not found");
+            throw new NotFoundException("EventServiceImpl: Event with id=" + eventId + " was not found");
         } else if (isPublic) {
             saveView(request);
         } else if (userId != null) {
@@ -171,7 +171,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void updateEventConfirmedRequests(Long eventId, Long confirmedRequests) {
         final Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("События с id = " + eventId + " нет в базе данных"));
+                .orElseThrow(() -> new NotFoundException("EventServiceImpl: События с id = " + eventId + " нет в базе данных"));
         event.setConfirmedRequests(confirmedRequests);
         eventRepository.save(event);
     }
@@ -179,34 +179,34 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEventById(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("События с id = " + eventId + " нет в базе данных"));
+                .orElseThrow(() -> new NotFoundException("EventServiceImpl: События с id = " + eventId + " нет в базе данных"));
         return eventDtoMapper.mapToFullDto(event);
     }
 
     private void validateUser(Long userId, Long initiatorId) {
         if (!initiatorId.equals(userId)) {
-            throw new NotFoundException("Trying to change information not from initiator of event");
+            throw new NotFoundException("EventServiceImpl: Trying to change information not from initiator of event");
         }
     }
 
     private void validateEventDate(String eventDate) {
         if (eventDate != null && LocalDateTime.parse(eventDate, formatter).isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new IncorrectRequestException("Event date should be early than 2 hours than current moment " + eventDate + " " + LocalDateTime.parse(eventDate, formatter));
+            throw new IncorrectRequestException("EventServiceImpl: Event date should be early than 2 hours than current moment " + eventDate + " " + LocalDateTime.parse(eventDate, formatter));
         }
     }
 
     private void validateEventDateForAdmin(LocalDateTime eventDate, StateAction stateAction) {
         if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new IncorrectRequestException("Event date should be early than 2 hours than current moment");
+            throw new IncorrectRequestException("EventServiceImpl: Event date should be early than 2 hours than current moment");
         }
         if (stateAction != null && stateAction.equals(StateAction.PUBLISH_EVENT) && eventDate.isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new ForbiddenException("Event date should be early than 1 hours than publish moment");
+            throw new ForbiddenException("EventServiceImpl: Event date should be early than 1 hours than publish moment");
         }
     }
 
     private void validateStatusForPrivate(State state, StateAction stateAction) {
         if (state.equals(State.PUBLISHED)) {
-            throw new ValidationException("Can't change event not cancelled or in moderation");
+            throw new ValidationException("EventServiceImpl: Can't change event not cancelled or in moderation");
         }
         switch (stateAction) {
             case null:
@@ -214,19 +214,19 @@ public class EventServiceImpl implements EventService {
             case StateAction.SEND_TO_REVIEW:
                 return;
             default:
-                throw new ForbiddenException("Unknown state action");
+                throw new ForbiddenException("EventServiceImpl: Unknown state action");
         }
     }
 
     private void validateStatusForAdmin(State state, StateAction stateAction) {
         if (!state.equals(State.PENDING) && stateAction.equals(StateAction.PUBLISH_EVENT)) {
-            throw new ValidationException("Can't publish not pending event");
+            throw new ValidationException("EventServiceImpl: Can't publish not pending event");
         }
         if (state.equals(State.PUBLISHED) && stateAction.equals(StateAction.REJECT_EVENT)) {
-            throw new ValidationException("Can't reject already published event");
+            throw new ValidationException("EventServiceImpl: Can't reject already published event");
         }
         if (stateAction != null && !stateAction.equals(StateAction.REJECT_EVENT) && !stateAction.equals(StateAction.PUBLISH_EVENT)) {
-            throw new ForbiddenException("Unknown state action");
+            throw new ForbiddenException("EventServiceImpl: Unknown state action");
         }
     }
 
@@ -255,7 +255,7 @@ public class EventServiceImpl implements EventService {
 
     private Event findEventById(Long eventId) {
         final Event event = eventRepository.findById(eventId).orElseThrow(
-                () -> new NotFoundException("Event with id=" + eventId + " was not found")
+                () -> new NotFoundException("EventServiceImpl: Event with id=" + eventId + " was not found")
         );
 
         return event;
@@ -267,12 +267,12 @@ public class EventServiceImpl implements EventService {
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now().format(formatter))
                 .build();
-        log.info("Сохраняем просмотр. Запрос URI: {}, IP: {}, Время: {}", request.getRequestURI(),
+        log.info("EventServiceImpl: Сохраняем просмотр. Запрос URI: {}, IP: {}, Время: {}", request.getRequestURI(),
                 request.getRemoteAddr(), LocalDateTime.now().format(formatter));
         try {
             statsClientWrapper.createHit(createHitDto);
         } catch (Exception e) {
-            log.error("Ошибка при сохранении просмотра для URI: {}. Сообщение об ошибке: {}", request.getRequestURI(),
+            log.error("EventServiceImpl: Ошибка при сохранении просмотра для URI: {}. Сообщение об ошибке: {}", request.getRequestURI(),
                     e.getMessage(), e);
         }
     }

@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findById(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException("Category with id=" + categoryId + " was not found")
+                () -> new NotFoundException("CategoryServiceImpl: Category with id=" + categoryId + " was not found")
         );
         return categoryDtoMapper.mapToDto(category);
     }
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto update(Long categoryId, CategoryDto categoryDto) {
         final Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException("Category with id=" + categoryId + " was not found")
+                () -> new NotFoundException("CategoryServiceImpl: Category with id=" + categoryId + " was not found")
         );
         category.setName(categoryDto.getName());
         final Category updatedCategory = categoryRepository.save(category);
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Long categoryId) {
         final Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException("Category with id=" + categoryId + " was not found")
+                () -> new NotFoundException("CategoryServiceImpl: Category with id=" + categoryId + " was not found")
         );
         categoryRepository.delete(category);
     }

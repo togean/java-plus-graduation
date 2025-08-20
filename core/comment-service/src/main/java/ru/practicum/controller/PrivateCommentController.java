@@ -25,9 +25,9 @@ public class PrivateCommentController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
-        log.info("Пришел GET запрос /users/{}/comments?from={}&size={}", userId, from, size);
+        log.info("PrivateCommentController: Пришел GET запрос /users/{}/comments?from={}&size={}", userId, from, size);
         final Collection<CommentDto> comments = commentService.findAllByPrivate(userId, from, size);
-        log.info("Отправлен ответ GET /users/{}/comments?from={}&size={} с телом: {}", userId, from, size, comments);
+        log.info("PrivateCommentController: Отправлен ответ GET /users/{}/comments?from={}&size={} с телом: {}", userId, from, size, comments);
         return comments;
     }
 
@@ -37,9 +37,9 @@ public class PrivateCommentController {
             @PathVariable Long userId,
             @RequestBody @Valid NewCommentDto commentDto
             ) {
-        log.info("Пришел POST запрос /users/{}/comments с телом {}", userId, commentDto);
+        log.info("PrivateCommentController: Пришел POST запрос /users/{}/comments с телом {}", userId, commentDto);
         final CommentDto comment = commentService.create(userId, commentDto);
-        log.info("Отправлен ответ POST /users/{}/comments с телом: {}", userId, comment);
+        log.info("PrivateCommentController: Отправлен ответ POST /users/{}/comments с телом: {}", userId, comment);
         return comment;
     }
 
@@ -49,9 +49,9 @@ public class PrivateCommentController {
             @PathVariable Long commentId,
             @RequestBody @Valid UpdateCommentDto commentDto
     ) {
-        log.info("Пришел PATCH запрос /users/{}/comments/{} с телом {}", userId, commentId, commentDto);
+        log.info("PrivateCommentController: Пришел PATCH запрос /users/{}/comments/{} с телом {}", userId, commentId, commentDto);
         final CommentDto comment = commentService.update(userId, commentId, commentDto);
-        log.info("Отправлен ответ PATCH /users/{}/comments?eventId={} с телом: {}", userId, commentId, comment);
+        log.info("PrivateCommentController: Отправлен ответ PATCH /users/{}/comments?eventId={} с телом: {}", userId, commentId, comment);
         return comment;
     }
 
@@ -61,8 +61,8 @@ public class PrivateCommentController {
             @PathVariable Long userId,
             @PathVariable Long commentId
     ) {
-        log.info("Пришел DELETE запрос /users/{}/comments/{}", userId, commentId);
+        log.info("PrivateCommentController: Пришел DELETE запрос /users/{}/comments/{}", userId, commentId);
         commentService.delete(userId, commentId);
-        log.info("Отправлен ответ DELETE /users/{}/comments/{}", userId, commentId);
+        log.info("PrivateCommentController: Отправлен ответ DELETE /users/{}/comments/{}", userId, commentId);
     }
 }

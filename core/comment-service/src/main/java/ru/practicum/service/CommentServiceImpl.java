@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         if (userId != null) {
             final UserDto userDto = userClient.findById(userId);
             if (!userDto.getId().equals(comment.getAuthorId())) {
-                throw new IncorrectRequestException("Trying to delete comment not from author");
+                throw new IncorrectRequestException("CommentServiceImpl: Trying to delete comment not from author");
             }
         }
         commentRepository.delete(comment);
@@ -90,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
 
     private Comment findById(Long commentId) {
         final Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new NotFoundException("Comment with id=" + commentId + " was not found")
+                () -> new NotFoundException("CommentServiceImpl: Comment with id=" + commentId + " was not found")
         );
         return comment;
     }
