@@ -8,14 +8,15 @@ import java.util.List;
 
 @Service
 public class StatsClientService{
-    private final StatsClient statsClient;
     private final String appName;
+    private final StatsClient statsClient;
+
 
     @Autowired
     public StatsClientService(StatsClient statsClient,
                               @Value("${spring.application.name}") String appName) {
-        this.statsClient = statsClient;
         this.appName = appName;
+        this.statsClient = statsClient;
     }
 
     public ResponseHitDto createHit(CreateHitDto createHitDto) {

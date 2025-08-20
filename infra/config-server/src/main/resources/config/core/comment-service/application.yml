@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: main-service
+    name: comment-service
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,6 +16,6 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/main_db
+    url: jdbc:postgresql://localhost:5433/comments_db
     username: postgres
     password: 12345
