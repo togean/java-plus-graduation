@@ -29,8 +29,9 @@ public class AdminUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody @Valid NewUserRequest newUserRequest) {
-        log.info("Пришел запрос на создание пользователя");
+        log.info("AdminUserController: Пришел запрос на создание пользователя");
         final UserDto userDto = userService.create(newUserRequest);
+        log.info("AdminUserController: запрос на создание пользователя выполнен");
         return userDto;
     }
 
@@ -40,15 +41,17 @@ public class AdminUserController {
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer from,
             @RequestParam(required = false, defaultValue = "10") @Positive Integer size
     ) {
-        log.info("Пришел запрос /admin/users?from={}&size={} по клиентам {}", from, size, ids);
+        log.info("AdminUserController: Пришел запрос /admin/users?from={}&size={} по клиентам {}", from, size, ids);
         final Collection<UserDto> users = userService.findAll(ids, from, size);
+        log.info("AdminUserController: запрос выполнен");
         return users;
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId) {
-        log.info("Пришел запрос на удаление пользователя с Id={}", userId);
+        log.info("AdminUserController: Пришел запрос на удаление пользователя с Id={}", userId);
         userService.delete(userId);
+        log.info("AdminUserController: запрос на удаление пользователя выполнен");
     }
 }
