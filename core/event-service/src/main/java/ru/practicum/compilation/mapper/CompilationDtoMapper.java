@@ -3,9 +3,9 @@ package ru.practicum.compilation.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.compilation.model.Compilation;
-import ru.practicum.model.CompilationDto;
-import ru.practicum.model.EventShortDto;
-import ru.practicum.model.NewCompilationDto;
+import ru.practicum.dtomodels.CompilationDto;
+import ru.practicum.dtomodels.EventShortDto;
+import ru.practicum.dtomodels.NewCompilationDto;
 
 import java.util.List;
 

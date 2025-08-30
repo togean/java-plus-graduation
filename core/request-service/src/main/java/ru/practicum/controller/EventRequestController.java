@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.model.EventRequestStatusUpdateRequest;
-import ru.practicum.model.EventRequestStatusUpdateResult;
-import ru.practicum.model.ParticipationRequestDto;
+import ru.practicum.dtomodels.EventRequestStatusUpdateRequest;
+import ru.practicum.dtomodels.EventRequestStatusUpdateResult;
+import ru.practicum.dtomodels.ParticipationRequestDto;
 import ru.practicum.service.EventRequestService;
 
 import java.util.Collection;

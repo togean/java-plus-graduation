@@ -2,7 +2,7 @@ package ru.practicum.location.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.model.LocationDto;
+import ru.practicum.dtomodels.LocationDto;
 import ru.practicum.location.model.Location;
 
 @Mapper(componentModel = "spring")

@@ -1,8 +1,8 @@
 package ru.practicum.service;
 
-import ru.practicum.model.NewUserRequest;
-import ru.practicum.model.UserDto;
-import ru.practicum.model.UserShortDto;
+import ru.practicum.dtomodels.NewUserRequest;
+import ru.practicum.dtomodels.UserDto;
+import ru.practicum.dtomodels.UserShortDto;
 
 import java.util.Collection;
 import java.util.List;

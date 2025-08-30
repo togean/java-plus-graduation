@@ -2,14 +2,14 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.model.*;
+import ru.practicum.dtomodels.*;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ForbiddenException;
 import ru.practicum.feign.client.EventClient;
 import ru.practicum.feign.client.UserClient;
 import ru.practicum.mapper.EventRequestDtoMapper;
-import ru.practicum.model.EventRequest;
+import ru.practicum.dtomodels.EventRequest;
 import ru.practicum.storage.EventRequestRepository;
 
 import java.time.LocalDateTime;

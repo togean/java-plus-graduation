@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.model.*;
+import ru.practicum.dtomodels.*;
 import ru.practicum.exception.IncorrectRequestException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.feign.client.EventClient;
 import ru.practicum.feign.client.UserClient;
 import ru.practicum.mapper.CommentDtoMapper;
-import ru.practicum.model.Comment;
+import ru.practicum.dtomodels.Comment;
 import ru.practicum.storage.CommentRepository;
 
 import java.util.ArrayList;

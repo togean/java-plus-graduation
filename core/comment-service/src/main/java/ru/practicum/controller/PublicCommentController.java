@@ -3,7 +3,7 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.model.CommentDto;
+import ru.practicum.dtomodels.CommentDto;
 import ru.practicum.service.CommentService;
 
 import java.util.Collection;
