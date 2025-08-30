@@ -47,6 +47,7 @@ public class EventServiceImpl implements EventService {
     private final LocationDtoMapper locationDtoMapper;
     private final StatsClientService statsClientService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Override
     public EventFullDto create(Long userId, NewEventDto eventDto) {
         final UserShortDto user = userClient.findById(userId);
@@ -276,6 +277,7 @@ public class EventServiceImpl implements EventService {
         final Location location = locationDtoMapper.mapFromDto(createdLocationDto);
         return location;
     }
+
     private void checkEventDateForAdmin(LocalDateTime eventDate, EventStateAction stateAction) {
         if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(2))) {
             throw new IncorrectRequestException("Event date should be early than 2 hours than current moment");
@@ -296,5 +298,4 @@ public class EventServiceImpl implements EventService {
             throw new ForbiddenException("Unknown state action");
         }
     }
-
 }

@@ -55,7 +55,7 @@ public class AdminUserController implements UserClient {
     @Override
     public UserShortDto findById(Long userId) {
         log.info("Пришел GET запрос /admin/users?id={}", userId);
-        final UserShortDto user= userService.findById(userId);
+        final UserShortDto user = userService.findById(userId);
         log.info("Отправлен ответ GET /admin/users?id={} с телом {}", userId, user);
         return user;
     }
@@ -67,5 +67,4 @@ public class AdminUserController implements UserClient {
         userService.delete(userId);
         log.info("Отправлен ответ DELETE /admin/users/{}", userId);
     }
-
 }

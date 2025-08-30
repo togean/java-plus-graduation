@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import ru.practicum.model.LocationDto;
 import ru.practicum.location.model.Location;
 
-
 @Mapper(componentModel = "spring")
 public interface LocationDtoMapper {
 

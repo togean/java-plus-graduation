@@ -39,7 +39,7 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "location_id")
     private Location location;
 

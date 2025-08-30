@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
+
     @Override
     public UserDto create(NewUserRequest newUserRequest) {
         final User user = userDtoMapper.mapFromDto(newUserRequest);

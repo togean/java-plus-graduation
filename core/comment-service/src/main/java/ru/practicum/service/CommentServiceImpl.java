@@ -25,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserClient userClient;
     private final CommentRepository commentRepository;
     private final CommentDtoMapper commentDtoMapper;
+
     @Override
     public CommentDto create(Long userId, NewCommentDto commentDto) {
         final UserShortDto userDto = userClient.findById(userId);

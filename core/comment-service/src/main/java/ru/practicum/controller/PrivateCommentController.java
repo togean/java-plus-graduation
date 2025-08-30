@@ -36,7 +36,7 @@ public class PrivateCommentController {
     public CommentDto create(
             @PathVariable Long userId,
             @RequestBody @Valid NewCommentDto commentDto
-            ) {
+    ) {
         log.info("Пришел POST запрос /users/{}/comments с телом {}", userId, commentDto);
         final CommentDto comment = commentService.create(userId, commentDto);
         log.info("Отправлен ответ POST /users/{}/comments с телом: {}", userId, comment);

@@ -24,6 +24,7 @@ public class EventRequestServiceImpl implements EventRequestService {
     private final EventClient eventClient;
     private final EventRequestRepository eventRequestRepository;
     private final EventRequestDtoMapper eventRequestDtoMapper;
+
     @Override
     public ParticipationRequestDto create(Long userId, Long eventId) {
         final UserShortDto user = userClient.findById(userId);
@@ -161,7 +162,6 @@ public class EventRequestServiceImpl implements EventRequestService {
                 currentConfirmed++;
             }
         }
-
         eventClient.updateEventConfirmedRequests(event.getId(), currentConfirmed);
     }
 }
