@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import ru.practicum.category.model.Category;
-import ru.practicum.dtomodels.EventState;
+import ru.practicum.dto.EventState;
 import ru.practicum.location.model.Location;
 
 @Entity

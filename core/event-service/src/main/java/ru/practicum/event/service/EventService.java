@@ -1,7 +1,7 @@
 package ru.practicum.event.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ru.practicum.dtomodels.*;
+import ru.practicum.dto.*;
 
 import java.util.Collection;
 import java.util.List;

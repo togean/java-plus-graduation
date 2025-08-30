@@ -1,11 +1,11 @@
 package ru.practicum.mapper;
 
 import org.mapstruct.*;
-import ru.practicum.dtomodels.CommentDto;
-import ru.practicum.dtomodels.NewCommentDto;
-import ru.practicum.dtomodels.UpdateCommentDto;
-import ru.practicum.dtomodels.UserShortDto;
-import ru.practicum.dtomodels.Comment;
+import ru.practicum.dto.CommentDto;
+import ru.practicum.dto.NewCommentDto;
+import ru.practicum.dto.UpdateCommentDto;
+import ru.practicum.dto.UserShortDto;
+import ru.practicum.dto.Comment;
 
 import java.util.List;
 

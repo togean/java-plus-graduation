@@ -2,7 +2,7 @@ package ru.practicum.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.dtomodels.EventRequest;
+import ru.practicum.dto.EventRequest;
 
 import java.util.Collection;
 

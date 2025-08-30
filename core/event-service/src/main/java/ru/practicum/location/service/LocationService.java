@@ -1,6 +1,6 @@
 package ru.practicum.location.service;
 
-import ru.practicum.dtomodels.LocationDto;
+import ru.practicum.dto.LocationDto;
 
 public interface LocationService {
 

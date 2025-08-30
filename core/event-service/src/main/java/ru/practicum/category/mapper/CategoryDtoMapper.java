@@ -3,8 +3,8 @@ package ru.practicum.category.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.category.model.Category;
-import ru.practicum.dtomodels.CategoryDto;
-import ru.practicum.dtomodels.NewCategoryDto;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
 
 @Mapper(componentModel = "spring")
 public interface CategoryDtoMapper {

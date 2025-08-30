@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
-import ru.practicum.dtomodels.CategoryDto;
-import ru.practicum.dtomodels.NewCategoryDto;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
 import ru.practicum.exception.NotFoundException;
 
 import java.util.ArrayList;

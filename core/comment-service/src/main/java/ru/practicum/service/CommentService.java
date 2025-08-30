@@ -1,8 +1,8 @@
 package ru.practicum.service;
 
-import ru.practicum.dtomodels.CommentDto;
-import ru.practicum.dtomodels.NewCommentDto;
-import ru.practicum.dtomodels.UpdateCommentDto;
+import ru.practicum.dto.CommentDto;
+import ru.practicum.dto.NewCommentDto;
+import ru.practicum.dto.UpdateCommentDto;
 
 import java.util.Collection;
 

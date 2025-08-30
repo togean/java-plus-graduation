@@ -12,7 +12,7 @@ import ru.practicum.StatsClientService;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
-import ru.practicum.dtomodels.*;
+import ru.practicum.dto.*;
 import ru.practicum.event.mapper.EventDtoMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.storage.EventRepository;

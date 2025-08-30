@@ -8,7 +8,7 @@ import ru.practicum.ResponseStatsDto;
 import ru.practicum.ResponseHitDto;
 import ru.practicum.exception.ValidationException;
 import ru.practicum.mapper.HitMapper;
-import ru.practicum.dtomodels.Hit;
+import ru.practicum.dto.Hit;
 import ru.practicum.reposirory.StatisticRepository;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package ru.practicum.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.dtomodels.User;
+import ru.practicum.dto.User;
 
 import java.util.Optional;
 

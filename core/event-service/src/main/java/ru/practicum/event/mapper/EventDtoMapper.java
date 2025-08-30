@@ -2,7 +2,7 @@ package ru.practicum.event.mapper;
 
 import org.mapstruct.*;
 import ru.practicum.category.mapper.CategoryDtoMapper;
-import ru.practicum.dtomodels.*;
+import ru.practicum.dto.*;
 import ru.practicum.event.model.Event;
 import ru.practicum.location.mapper.LocationDtoMapper;
 

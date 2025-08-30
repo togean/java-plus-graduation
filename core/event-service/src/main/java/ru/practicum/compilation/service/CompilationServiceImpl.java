@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.mapper.CompilationDtoMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.storage.CompilationRepository;
-import ru.practicum.dtomodels.CompilationDto;
-import ru.practicum.dtomodels.EventShortDto;
-import ru.practicum.dtomodels.NewCompilationDto;
-import ru.practicum.dtomodels.UpdateCompilationRequest;
+import ru.practicum.dto.CompilationDto;
+import ru.practicum.dto.EventShortDto;
+import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.dto.UpdateCompilationRequest;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.NotFoundException;
 
