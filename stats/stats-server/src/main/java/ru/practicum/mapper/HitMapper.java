@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.CreateHitDto;
 import ru.practicum.ResponseHitDto;
-import ru.practicum.model.Hit;
+import ru.practicum.dto.Hit;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

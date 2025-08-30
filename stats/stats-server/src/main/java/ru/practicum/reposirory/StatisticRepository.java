@@ -3,7 +3,7 @@ package ru.practicum.reposirory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.practicum.model.Hit;
+import ru.practicum.dto.Hit;
 
 import java.util.List;
 
