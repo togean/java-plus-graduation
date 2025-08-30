@@ -6,31 +6,24 @@ spring:
     name: gateway-server
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+      discovery.locator.enabled: true
       routes:
-        - id: public_category
-          uri: lb://main-service
+        - id: request_service_route
+          uri: lb://request-service
           predicates:
-            - Path=/categories/**
+            - Path=/users/*/requests/**,/users/*/events/*/requests/**
 
-        - id: public_compilation
-          uri: lb://main-service
+        - id: comment_service_route
+          uri: lb://comment-service
           predicates:
-            - Path=/compilations/**
+            - Path=/events/*/comments/**,/users/*/comments/**,/admin/comments/**
 
-        - id: public_event
-          uri: lb://main-service
+        - id: event_service_route
+          uri: lb://event-service
           predicates:
-            - Path=/events/**
+            - Path=/admin/categories/**,/categories/**,/admin/compilations/**,/compilations/**,/admin/events/**,/users/*/events/**,/events/**
 
-        - id: public_user
-          uri: lb://main-service
+        - id: user_service_route
+          uri: lb://user-service
           predicates:
-            - Path=/users/**
-
-        - id: public_admin
-          uri: lb://main-service
-          predicates:
-            - Path=/admin/**
+            - Path=/admin/users/**
