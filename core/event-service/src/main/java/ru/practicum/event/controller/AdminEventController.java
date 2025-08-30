@@ -29,10 +29,10 @@ public class AdminEventController implements EventClient {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
-        log.info("Пришел GET запрос /admin/events с параметрами: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
+        log.info("AdminEventController: Пришел GET запрос /admin/events с параметрами: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         final Collection<EventFullDto> events = eventService.findAllByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
-        log.info("Отправлен ответ GET /admin/events с телом: {}", events);
+        log.info("AdminEventController: Отправлен ответ GET /admin/events с телом: {}", events);
         return events;
     }
 
