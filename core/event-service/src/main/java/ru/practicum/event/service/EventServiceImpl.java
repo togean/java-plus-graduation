@@ -246,8 +246,7 @@ public class EventServiceImpl implements EventService {
             return null;
         }
         final CategoryDto categoryDto = categoryService.findById(categoryId);
-        final Category category = categoryDtoMapper.mapFromDto(categoryDto);
-        return category;
+        return categoryDtoMapper.mapFromDto(categoryDto);
     }
 
     private Location saveLocation(LocationDto locationDto) {
@@ -255,8 +254,7 @@ public class EventServiceImpl implements EventService {
             return null;
         }
         final LocationDto createdLocationDto = locationService.create(locationDto);
-        final Location location = locationDtoMapper.mapFromDto(createdLocationDto);
-        return location;
+        return locationDtoMapper.mapFromDto(createdLocationDto);
     }
 
     private void checkEventDateForAdmin(LocalDateTime eventDate, EventStateAction stateAction) {

@@ -24,7 +24,7 @@ spring:
 
       consumer:
         groupId: "aggregator-group"
-        clientIdConfig: "consumer"
+        clientIdConfig: "consumer-1"
         keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
         valueDeserializer: "ru.practicum.deserializer.UserActionDeserializer"
         attemptTimeout: 500
