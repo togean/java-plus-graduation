@@ -6,9 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.CreateHitDto;
-import ru.practicum.ResponseStatsDto;
-import ru.practicum.StatsClientService;
+import ru.practicum.AnalyzerClient;
+import ru.practicum.CollectorClient;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
@@ -16,15 +15,19 @@ import ru.practicum.dto.*;
 import ru.practicum.event.mapper.EventDtoMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.storage.EventRepository;
+import ru.practicum.ewm.stats.proto.ActionTypeProto;
+import ru.practicum.ewm.stats.proto.RecommendedEventProto;
 import ru.practicum.exception.ConflictException;
-import ru.practicum.exception.IncorrectRequestException;
 import ru.practicum.exception.ForbiddenException;
+import ru.practicum.exception.IncorrectRequestException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.feign.client.RequestClient;
 import ru.practicum.feign.client.UserClient;
 import ru.practicum.location.mapper.LocationDtoMapper;
 import ru.practicum.location.model.Location;
 import ru.practicum.location.service.LocationService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -45,7 +48,10 @@ public class EventServiceImpl implements EventService {
     private final EventDtoMapper eventDtoMapper;
     private final CategoryDtoMapper categoryDtoMapper;
     private final LocationDtoMapper locationDtoMapper;
-    private final StatsClientService statsClientService;
+    private final CollectorClient collectorClient;
+    private final AnalyzerClient  analyzerClient;
+    private final RequestClient requestClient;
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -68,18 +74,16 @@ public class EventServiceImpl implements EventService {
         if (sort != null && !sort.equals("EVENT_DATE") && !sort.equals("VIEWS")) {
             throw new IncorrectRequestException("Unknown sort type");
         }
-        saveView(request);
-        log.info("Saved view");
         final Collection<Event> events = eventRepository.findAllByPublic(text, categories, paid, rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter), rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, formatter), onlyAvailable, (Pageable) PageRequest.of(from, size));
         final Collection<UserShortDto> usersDto = userClient.getShort(events.stream().map(Event::getInitiatorId).toList(), 0, 10);
         final Map<Long, UserShortDto> usersInfo = usersDto.stream().collect(Collectors.toMap(UserShortDto::getId, u -> u));
         return events.stream()
                 .map(event -> {
                     final EventShortDto eventDto = eventDtoMapper.mapToShortDto(event, usersInfo.get(event.getInitiatorId()));
-                    eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+                    eventDto.setRating(getEventRating(event.getId()));
                     return eventDto;
                 })
-                .sorted((e1, e2) -> sort == null || sort.equals("EVENT_DATE") ? e1.getEventDate().compareTo(e2.getEventDate()) : e1.getViews().compareTo(e2.getViews()))
+                .sorted((e1, e2) -> sort == null || sort.equals("EVENT_DATE") ? e1.getEventDate().compareTo(e2.getEventDate()) : e1.getRating().compareTo(e2.getRating()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -90,7 +94,7 @@ public class EventServiceImpl implements EventService {
         return events.stream()
                 .map(event -> {
                     final EventShortDto eventDto = eventDtoMapper.mapToShortDto(event, user);
-                    eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+                    eventDto.setRating(getEventRating(event.getId()));
                     return eventDto;
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -104,7 +108,7 @@ public class EventServiceImpl implements EventService {
         return events.stream()
                 .map(event -> {
                     final EventFullDto eventDto = eventDtoMapper.mapToFullDto(event, usersInfo.get(event.getInitiatorId()));
-                    eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+                    eventDto.setRating(getEventRating(event.getId()));
                     return eventDto;
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -119,7 +123,7 @@ public class EventServiceImpl implements EventService {
         return events.stream()
                 .map(event -> {
                     final EventShortDto eventDto = eventDtoMapper.mapToShortDto(event, usersInfo.get(event.getInitiatorId()));
-                    eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+                    eventDto.setRating(getEventRating(event.getId()));
                     return eventDto;
                 })
                 .collect(Collectors.toList());
@@ -132,14 +136,14 @@ public class EventServiceImpl implements EventService {
         if (isPublic && !event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
         } else if (isPublic) {
-            saveView(request);
+            collectorClient.collectUserAction(userId, eventId, ActionTypeProto.ACTION_VIEW, Instant.now());
         } else if (userId != null) {
             userClient.findById(userId);
         }
 
         final UserShortDto user = userClient.findById(event.getInitiatorId());
         final EventFullDto eventDto = eventDtoMapper.mapToFullDto(event, user);
-        eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+        eventDto.setRating(getEventRating(event.getId()));
         return eventDto;
     }
 
@@ -149,7 +153,7 @@ public class EventServiceImpl implements EventService {
 
         final UserShortDto user = userClient.findById(event.getInitiatorId());
         final EventFullDto eventDto = eventDtoMapper.mapToFullDto(event, user);
-        eventDto.setViews(countViews(event.getId(), event.getCreatedOn(), LocalDateTime.now()));
+        eventDto.setRating(getEventRating(event.getId()));
         return eventDto;
     }
 
@@ -169,7 +173,7 @@ public class EventServiceImpl implements EventService {
         final Event updatedEvent = eventRepository.save(event);
 
         final EventFullDto updatedEventDto = eventDtoMapper.mapToFullDto(updatedEvent, user);
-        updatedEventDto.setViews(countViews(updatedEvent.getId(), updatedEvent.getCreatedOn(), LocalDateTime.now()));
+        updatedEventDto.setRating(getEventRating(event.getId()));
         return updatedEventDto;
     }
 
@@ -191,7 +195,7 @@ public class EventServiceImpl implements EventService {
         final UserShortDto user = userClient.findById(updatedEvent.getInitiatorId());
 
         final EventFullDto updatedEventDto = eventDtoMapper.mapToFullDto(updatedEvent, user);
-        updatedEventDto.setViews(countViews(updatedEvent.getId(), updatedEvent.getCreatedOn(), LocalDateTime.now()));
+        updatedEventDto.setRating(getEventRating(event.getId()));
         return updatedEventDto;
     }
 
@@ -207,29 +211,6 @@ public class EventServiceImpl implements EventService {
         if (eventDate != null && LocalDateTime.parse(eventDate, formatter).isBefore(LocalDateTime.now().plusHours(2))) {
             throw new IncorrectRequestException("Event date should be early than 2 hours than current moment " + eventDate + " " + LocalDateTime.parse(eventDate, formatter));
         }
-    }
-
-    private void saveView(HttpServletRequest request) {
-        CreateHitDto createHitDto = CreateHitDto.builder()
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now().format(formatter))
-                .build();
-        log.info("Сохраняем просмотр. Запрос URI: {}, IP: {}, Время: {}", request.getRequestURI(),
-                request.getRemoteAddr(), LocalDateTime.now().format(formatter));
-        try {
-            statsClientService.createHit(createHitDto);
-        } catch (Exception e) {
-            log.error("Ошибка при сохранении просмотра для URI: {}. Сообщение об ошибке: {}", request.getRequestURI(),
-                    e.getMessage(), e);
-        }
-    }
-
-    private Long countViews(Long eventId, LocalDateTime start, LocalDateTime end) {
-        final List<String> uris = List.of("/events/" + eventId);
-        return statsClientService.getStats(start.format(formatter), end.format(formatter), uris, true).stream()
-                .mapToLong(ResponseStatsDto::getHits)
-                .sum();
     }
 
     private Event findEventById(Long eventId) {
@@ -297,5 +278,28 @@ public class EventServiceImpl implements EventService {
         if (stateAction != null && !stateAction.equals(EventStateAction.REJECT_EVENT) && !stateAction.equals(EventStateAction.PUBLISH_EVENT)) {
             throw new ForbiddenException("Unknown state action");
         }
+    }
+
+    @Override
+    public Collection<EventShortDto> getRecommendedEvents(Long userId, Integer maxResults) {
+        List<Long> eventsIds = analyzerClient.getRecommendation(userId, maxResults)
+                .map(RecommendedEventProto::getEventId)
+                .collect(Collectors.toCollection(ArrayList::new));
+        return findAllById(eventsIds);
+    }
+
+    @Override
+    public void addLikeToEvent(Long eventId, Long userId){
+        if (!requestClient.isUserRegisteredOnEvent(userId, eventId)) {
+            throw new IncorrectRequestException("Пользователь не участвует в этом событии.");
+        }
+        collectorClient.collectUserAction(userId, eventId, ActionTypeProto.ACTION_LIKE, Instant.now());
+    }
+
+    private Double getEventRating(Long eventId){
+        return analyzerClient.getInteractionsCount(List.of(eventId))
+                .map(RecommendedEventProto::getScore)
+                .findFirst()
+                .orElse(0.0);
     }
 }

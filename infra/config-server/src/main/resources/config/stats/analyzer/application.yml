@@ -1,0 +1,48 @@
+grpc:
+  server:
+    port: 0
+  client:
+    analyzer:
+      address: 'discovery:///analyzer'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+analyzer:
+  kafka:
+    config:
+      bootstrap-servers: "localhost:9092"
+      consumers:
+        userAction:
+          group-id: "action-analyzer-group"
+          client-id: "action-consumer-1"
+          key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+          value-deserializer: "ru.practicum.deserializer.UserActionDeserializer"
+          attempt-timeout: 1000
+          enable-auto-commit: "false"
+        eventSimilarity:
+          group-id: "similarity-analyzer-group"
+          client-id: "similarity-consumer-1"
+          key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+          value-deserializer: "ru.practicum.deserializer.EventSimilarityDeserializer"
+          attempt-timeout: 1000
+          enable-auto-commit: "false"
+      user-action-topic: "stats.user-actions.v1"
+      events-similarity-topic: "stats.events-similarity.v1"
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/analyzer_db
+    username: postgres
+    password: postgres
