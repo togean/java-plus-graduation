@@ -53,13 +53,13 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
 
                 <configuration>
-                    <protocVersion>3.21.5</protocVersion>
+                    <protocVersion>${protobuf.version}</protocVersion>
 
                     <binaryMavenPlugins>
                         <binaryMavenPlugin>
                             <groupId>io.grpc</groupId>
                             <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>1.72.0</version>
+                            <version>${grpc.version}</version>
                         </binaryMavenPlugin>
                     </binaryMavenPlugins>
                 </configuration>
@@ -76,6 +76,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
