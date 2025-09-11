@@ -27,4 +27,9 @@ public interface EventService {
     EventFullDto updateByAdmin(Long eventId, UpdateEventAdminRequest eventDto);
 
     void updateEventConfirmedRequests(Long eventId, Long confirmedRequests);
+
+    void addLikeToEvent(Long eventId, Long userId);
+
+    Collection<EventShortDto> getRecommendedEvents(Long userId, Integer maxResults);
+
 }

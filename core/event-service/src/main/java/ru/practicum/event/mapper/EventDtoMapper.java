@@ -24,7 +24,7 @@ public interface EventDtoMapper {
     @Mapping(target = "requestModeration", source = "event.requestModeration")
     @Mapping(target = "state", source = "event.state")
     @Mapping(target = "title", source = "event.title")
-    @Mapping(target = "views", source = "event.views")
+    @Mapping(target = "rating", source = "event.rating")
     @Mapping(target = "eventDate", source = "event.eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "createdOn", source = "event.createdOn", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "publishedOn", source = "event.publishedOn", dateFormat = "yyyy-MM-dd HH:mm:ss", ignore = true)
@@ -37,7 +37,7 @@ public interface EventDtoMapper {
     @Mapping(target = "id", source = "event.id")
     @Mapping(target = "paid", source = "event.paid")
     @Mapping(target = "title", source = "event.title")
-    @Mapping(target = "views", source = "event.views")
+    @Mapping(target = "rating", source = "event.rating")
     @Mapping(target = "eventDate", source = "event.eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     EventShortDto mapToShortDto(Event event, UserShortDto user);
 
@@ -49,7 +49,7 @@ public interface EventDtoMapper {
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "publishedOn", ignore = true)
-    @Mapping(target = "views", expression = "java(0L)")
+    @Mapping(target = "rating", expression = "java(0.0)")
     Event mapFromDto(NewEventDto newEventDto);
 
     @Mapping(target = "initiatorId", source = "initiator.id")
@@ -67,7 +67,7 @@ public interface EventDtoMapper {
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "createdOn", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
-    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "rating", ignore = true)
     void updateFromDto(@MappingTarget Event event, UpdateEventUserRequest eventDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -79,6 +79,6 @@ public interface EventDtoMapper {
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "createdOn", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
-    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "rating", ignore = true)
     void updateFromDto(@MappingTarget Event event, UpdateEventAdminRequest eventDto);
 }

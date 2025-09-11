@@ -19,3 +19,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/request_db
     username: postgres
     password: postgres
+grpc:
+  client:
+    collector:
+      address: 'discovery:///collector'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
