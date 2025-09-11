@@ -39,9 +39,9 @@ public class PublicEventController {
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto findById(@PathVariable Long eventId, HttpServletRequest request) {
+    public EventFullDto findById(@PathVariable Long eventId, HttpServletRequest request, @RequestHeader("X-EWM-USER-ID") long userId) {
         log.info("Пришел GET запрос /events/{}", eventId);
-        final EventFullDto event = eventService.findById(null, eventId, true, request);
+        final EventFullDto event = eventService.findById(userId, eventId, true, request);
         log.info("Отправлен ответ GET /events/{} с телом: {}", eventId, event);
         return event;
     }
